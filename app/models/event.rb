@@ -13,9 +13,6 @@ class Event < ApplicationRecord
   has_many :categorizations
   has_many :categories, through: :categorizations
 
-  attribute :male_only, :boolean, default: false
-  attribute :female_only, :boolean, default: false
-
   scope :future, -> { where('held_at > ?', Time.current) }
   scope :past, -> { where('held_at <= ?', Time.current) }
 
@@ -36,15 +33,6 @@ class Event < ApplicationRecord
     !past?
   end
 
-  def user_male?
-    user.gender == "男性"
-  end
-
-  # ユーザーが女性かどうかを判定するメソッド
-  def user_female?
-    user.gender == "女性"
-  end
-
   def add_category_by_name(category_name)
     category_name = category_name.strip
     return if category_name.blank?
@@ -53,7 +41,5 @@ class Event < ApplicationRecord
     categories << category
   end
 
-
-  
 
 end
