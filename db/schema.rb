@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_19_072358) do
+ActiveRecord::Schema.define(version: 2023_05_12_111101) do
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -50,6 +50,21 @@ ActiveRecord::Schema.define(version: 2022_01_19_072358) do
     t.index ["user_id"], name: "index_bookmarks_on_user_id"
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "categorizations", force: :cascade do |t|
+    t.integer "event_id", null: false
+    t.integer "category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_categorizations_on_category_id"
+    t.index ["event_id"], name: "index_categorizations_on_event_id"
+  end
+
   create_table "comments", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "event_id", null: false
@@ -78,6 +93,8 @@ ActiveRecord::Schema.define(version: 2022_01_19_072358) do
     t.integer "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "male_only"
+    t.boolean "female_only"
     t.index ["prefecture_id"], name: "index_events_on_prefecture_id"
     t.index ["user_id"], name: "index_events_on_user_id"
   end
@@ -135,6 +152,8 @@ ActiveRecord::Schema.define(version: 2022_01_19_072358) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "gender"
+    t.boolean "display_gender"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
@@ -142,6 +161,8 @@ ActiveRecord::Schema.define(version: 2022_01_19_072358) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bookmarks", "events"
   add_foreign_key "bookmarks", "users"
+  add_foreign_key "categorizations", "categories"
+  add_foreign_key "categorizations", "events"
   add_foreign_key "comments", "events"
   add_foreign_key "comments", "users"
   add_foreign_key "event_attendances", "events"

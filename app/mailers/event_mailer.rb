@@ -24,4 +24,11 @@ class EventMailer < ApplicationMailer
     @user = params[:user]
     mail(to: @user.email, subject: 'イベントがブックマークされました')
   end
+
+  def gender_limited_event_created(event, user)
+    @event = event
+    @user = user
+    mail(to: @user.email, subject: '性別限定イベントが作成されました')
+  end
+
 end

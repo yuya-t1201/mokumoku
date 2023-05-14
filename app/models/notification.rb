@@ -12,7 +12,8 @@ class Notification < ApplicationRecord
     created_event: 0,
     commented_to_event: 1,
     attended_to_event: 2,
-    liked_event: 3
+    liked_event: 3,
+    gender_limited_event_created: 4
   }, _prefix: true
 
   scope :with_avatar, -> { preload(sender: { avatar_attachment: :blob }) }
@@ -61,13 +62,24 @@ class Notification < ApplicationRecord
     )
   end
 
-  # rubocop:disable Metrics/MethodLength
+  def self.gender_limited_event_created(event, user)
+    if event.male_only? || event.female_only?
+      Notification.create!(
+        kind: :gender_limited_event_created,
+        receiver: user,
+        sender: event.user,
+        notifiable: event,
+        read: false,
+        message: "#{event.user.name}が性別限定イベントを作りました"
+      )
+    end
+  end
+
   def path
     return '#' if notifiable.blank?
 
-    # rubocop:disable Lint/DuplicateBranch
     case kind.to_sym
-    when :created_event
+    when :created_event, :gender_limited_event_created
       event_path(notifiable)
     when :commented_to_event
       event_path(notifiable.event)
@@ -75,8 +87,8 @@ class Notification < ApplicationRecord
       event_path(notifiable.event)
     when :liked_event
       event_path(notifiable.event)
+    else
+      '#' # 未知の種類の通知の場合は '#' を返す（適宜修正してください）
     end
-    # rubocop:enable Lint/DuplicateBranch
   end
-  # rubocop:enable Metrics/MethodLength
 end
