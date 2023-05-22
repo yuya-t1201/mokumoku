@@ -1,7 +1,4 @@
 ja:
-  genders:
-    male: 男性
-    female: 女性
   enums:
     notification_timing:
       timing:

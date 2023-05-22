@@ -81,4 +81,10 @@ class User < ApplicationRecord
     display_gender || false
   end
 
+  enum gender: { other: 0, male: 1, female: 2 }
+
+  def female?
+    gender == 'female'
+  end
+
 end

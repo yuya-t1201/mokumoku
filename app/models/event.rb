@@ -22,9 +22,6 @@ class Event < ApplicationRecord
     validates :held_at
   end
 
-  
-
-
   def past?
     held_at < Time.current
   end
@@ -34,12 +31,13 @@ class Event < ApplicationRecord
   end
 
   def add_category_by_name(category_name)
-    category_name = category_name.strip
     return if category_name.blank?
-
+  
+    category_name = category_name.strip
     category = Category.find_or_create_by(name: category_name)
     categories << category
   end
+  
 
 
 end
