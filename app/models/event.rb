@@ -10,6 +10,8 @@ class Event < ApplicationRecord
   has_many :attendees, through: :attendances, class_name: 'User', source: :user
   has_many :bookmarks, dependent: :destroy
   has_one_attached :thumbnail
+  has_many :categorizations
+  has_many :categories, through: :categorizations
 
   scope :future, -> { where('held_at > ?', Time.current) }
   scope :past, -> { where('held_at <= ?', Time.current) }
@@ -26,5 +28,18 @@ class Event < ApplicationRecord
 
   def future?
     !past?
+  end
+
+  def add_category_by_name(category_name)
+    return if category_name.blank?
+
+    category_name = category_name.strip
+    category = Category.find_or_create_by(name: category_name)
+    categories << category
+  end
+
+  def set_gender_restrictions(params)
+    self.male_only = params[:male_only] == '1'
+    self.female_only = params[:female_only] == '1'
   end
 end

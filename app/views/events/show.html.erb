@@ -1,3 +1,22 @@
+<% if flash[:success] %>
+  <div class="alert alert-success">
+    <%= flash[:success] %>
+  </div>
+<% end %>
+
+<% if flash[:notice] %>
+  <div class="alert alert-success">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<div class="container">
+  <% if flash[:alert] %>
+    <div class="alert alert-danger">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+  
 <div class="container">
   <div class="row">
     <div class="col-12 col-md-8">
@@ -44,7 +63,23 @@
           イベントの説明
         </div>
         <div class="card-body">
-          <%= simple_format @event.content %>
+          <%= simple_format @event.content %>     
+          <% if @event.male_only? %>
+            <div class="alert alert-info mt-3">
+              このイベントは男性のみ参加可能です
+            </div>
+          <% elsif @event.female_only? %>
+            <div class="alert alert-info mt-3">
+            Female Only
+            </div>
+          <% end %>
+        </div>
+        </div>
+        <div class="card-footer">
+          カテゴリ:
+          <% @event.categories.each do |category| %>
+            <span class="badge bg-primary"><%= category.name %></span>
+          <% end %>
         </div>
       </div>
     </div>
@@ -83,8 +118,10 @@
           </h4>
           <hr />
           <div class="text-center">
-            <% if logged_in? %>
-              <% if !current_user.owner?(@event) %>
+          <% if logged_in? %>
+            <% if @event.female_only? %>
+            <% if current_user.female? || current_user.own?(@event) %>
+              <div class="text-center">
                 <% if current_user.attend?(@event) %>
                   <%= link_to 'キャンセルする',
                               event_attendance_url(@event),
@@ -100,8 +137,28 @@
                               data: { confirm: '申し込みます' }
                   %>
                 <% end %>
-              <% end %>
+              </div>
             <% end %>
+          <% else %>
+            <div class="text-center">
+              <% if current_user.attend?(@event) %>
+                <%= link_to 'キャンセルする',
+                            event_attendance_url(@event),
+                            class: 'btn btn-primary',
+                            method: :delete,
+                            data: { confirm: 'キャンセルします' }
+                %>
+              <% else %>
+                <%= link_to 'このもくもく会に参加する',
+                            event_attendance_url(@event),
+                            class: 'btn btn-primary',
+                            method: :post,
+                            data: { confirm: '申し込みます' }
+                %>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
           </div>
         </div>
       </div>
@@ -112,7 +169,14 @@
         </div>
         <div class="card-body">
            <ul class="list-unstyled">
-             <%= render partial: 'events/attendee', collection: @event.attendees %>
+             <% @event.attendees.each do |attendee| %>
+              <li>
+                <%= attendee.name %>
+                <% if attendee.display_gender? %>
+                 （<%= t("genders.#{attendee.gender}") %>                 ）
+                <% end %>
+              </li>
+            <% end %>
            </ul>
         </div>
       </div>

@@ -1,3 +1,4 @@
+
 <div class="col">
   <div class="card h-100">
     <%= link_to event_path(event) do %>
@@ -8,6 +9,15 @@
         <%= link_to event.title, event_path(event)  %>
       </h4>
       <p class="card-text"><%= event.content %></p>
+      <hr />
+      <% if event.categories.any? %>
+        <div class="mb-3">
+          <strong>カテゴリ:</strong>
+          <% event.categories.each do |category| %>
+            <span class="badge bg-primary"><%= category.name %></span>
+          <% end %>
+        </div>
+      <% end %>
       <hr />
       <div class="d-flex justify-content-between">
         <div>
@@ -35,6 +45,18 @@
           </div>
         <% end %>
       </div>
+      <hr />
+      <% if event.male_only? %>
+        <div class="text-primary">
+          <i class="bi bi-gender-male"></i>
+          男性限定
+        </div>
+      <% elsif event.female_only? %>
+        <div class="text-danger">
+          <i class="bi bi-gender-female"></i>
+          女性限定
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

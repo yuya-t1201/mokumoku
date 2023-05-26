@@ -7,9 +7,15 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    if @user.save
-      auto_login(@user)
-      redirect_to events_path, success: 'ユーザー登録が完了しました'
+    if @user.valid?
+      @user.gender = 0 if @user.gender.blank?
+      if @user.save
+        auto_login(@user)
+        redirect_to events_path, success: 'ユーザー登録が完了しました'
+      else
+        flash.now[:danger] = 'ユーザー登録に失敗しました'
+        render :new
+      end
     else
       flash.now[:danger] = 'ユーザー登録に失敗しました'
       render :new
@@ -17,6 +23,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :name, :password, :password_confirmation)
+    params.require(:user).permit(:email, :name, :gender, :password, :password_confirmation)
   end
 end

@@ -21,15 +21,15 @@
           <% end %>
         </div>
       </div>
-    <% end %>
-    <hr class="my-5">
-    <div>
-      <h4 class="mb-0">Personal Details</h4>
-      <p class="mb-4">
-        Edit your personal information and address.
-      </p>
-      <!-- Form -->
-      <%= form_with(model: @user, url: mypage_profile_path) do |f| %>
+
+      <hr class="my-5">
+
+      <div>
+        <h4 class="mb-0">Personal Details</h4>
+        <p class="mb-4">
+          Edit your personal information and address.
+        </p>
+        <!-- Form -->
         <div class="mb-3">
           <%= f.label :email, class: 'form-label' %>
           <%= f.email_field :email, class: 'form-control', required: true, placeholder: 'Email' %>
@@ -38,11 +38,21 @@
           <%= f.label :name, class: 'form-label' %>
           <%= f.text_field :name, class: 'form-control', placeholder: 'らんてくん' %>
         </div>
+        <div class="mb-3">
+          <%= f.label :gender, class: 'form-label' %>
+          <%= f.select :gender, User.genders.keys.map { |key| [key.capitalize, key] }, { include_blank: true }, class: 'form-control' %>
+        </div>
+        <div class="mb-3">
+          <%= f.label :display_gender, class: 'form-label' %>
+          <%= f.check_box :display_gender, class: 'form-check-input' %>
+          <%= f.label :display_gender, class: 'form-check-label', for: 'user_display_gender' do %>
+            性別を表示する
+          <% end %>
+        </div>
         <div class="col-12">
-          <!-- Button -->
           <%= f.submit class: 'btn btn-primary' %>
         </div>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
   </div>
 </div>
