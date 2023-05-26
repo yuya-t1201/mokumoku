@@ -32,12 +32,14 @@ class Event < ApplicationRecord
 
   def add_category_by_name(category_name)
     return if category_name.blank?
-  
+
     category_name = category_name.strip
     category = Category.find_or_create_by(name: category_name)
     categories << category
   end
-  
 
-
+  def set_gender_restrictions(params)
+    self.male_only = params[:male_only] == '1'
+    self.female_only = params[:female_only] == '1'
+  end
 end

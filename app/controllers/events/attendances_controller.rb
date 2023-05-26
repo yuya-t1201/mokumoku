@@ -3,8 +3,8 @@
 class Events::AttendancesController < ApplicationController
   def create
     @event = Event.find(params[:event_id])
-    
-    if @event.female_only? && current_user.gender != "female"
+
+    if @event.female_only? && current_user.gender != 'female'
       flash[:alert] = 'このイベントは女性のみ参加可能です'
       redirect_back(fallback_location: root_path)
     else

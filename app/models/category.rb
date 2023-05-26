@@ -3,6 +3,4 @@ class Category < ApplicationRecord
   has_many :events, through: :categorizations
 
   validates :name, presence: true, uniqueness: true
-
-
 end

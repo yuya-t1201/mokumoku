@@ -30,5 +30,4 @@ class EventMailer < ApplicationMailer
     @user = user
     mail(to: @user.email, subject: '性別限定イベントが作成されました')
   end
-
 end

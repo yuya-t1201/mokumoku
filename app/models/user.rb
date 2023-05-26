@@ -86,5 +86,4 @@ class User < ApplicationRecord
   def female?
     gender == 'female'
   end
-
 end
